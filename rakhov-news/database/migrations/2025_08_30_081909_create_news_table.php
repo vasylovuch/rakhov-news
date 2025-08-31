@@ -13,6 +13,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
+            $table->string('photo')->nullable();
+            $table->unsignedBigInteger('views')->default(0); 
+            $table->unsignedBigInteger('likes')->default(0);
             $table->timestamps();
         });
     }

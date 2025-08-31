@@ -10,13 +10,20 @@ class News extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
-        'user_id',
+        'title', 
+        'content', 
+        'photo', 
+        'views', 
+        'likes'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
