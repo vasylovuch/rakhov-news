@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,25 +10,33 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        return view('auth.login');
+        // Показати форму входу
+        return view('auth.login'); 
     }
 
     public function store(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
-        }
+    if (Auth::attempt($credentials, $request->filled('remember'))) {
+        $request->session()->regenerate();
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        // Скидаємо старий intended URL, щоб fallback не йшов на '/'
+        $request->session()->forget('url.intended');
+
+        // Перенаправлення на сторінку створення новини
+        return redirect()->route('news.create');
     }
+
+    return back()->withErrors([
+        'email' => 'Невірні дані для входу.',
+    ]);
+}
+
+
 
     public function destroy(Request $request)
     {

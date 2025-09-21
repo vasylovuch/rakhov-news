@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\News;
+use PhpParser\Node\Expr\FuncCall;
 
 class NewsController extends Controller
 {
@@ -15,6 +16,9 @@ class NewsController extends Controller
 
     public function create()
     {
+        if (!auth()->check()) {
+        return redirect()->route('choose'); // або login
+    }
         return view('news.create');
     }
 
@@ -66,4 +70,15 @@ class NewsController extends Controller
         return redirect()->route('news.index')
                          ->with('success', 'Новину видалено!');
     }
+
+    public function choose() 
+    {
+        return view('auth.choose');
+    }
+
+    public function about() 
+    {
+        return view('news.about');
+    }
+
 }
