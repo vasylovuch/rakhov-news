@@ -22,19 +22,23 @@
                          style="width:100%; border-radius:10px; cursor:pointer; margin-bottom:15px;"
                          onclick="openModal('https://via.placeholder.com/300x200?text=Немає+фото')">
                 @endif
+
                 <h3 style="margin-bottom:10px;">{{ $sell->title }}</h3>
                 <p style="margin-bottom:10px;">{{ $sell->description }}</p>
                 <p style="font-weight:bold; margin-bottom:10px;">{{ $sell->price }} грн</p>
                 <p><strong>Категорія:</strong> {{ $sell->category }}</p>
                 <p><strong>Телефон:</strong> {{ $sell->phone }}</p>
                 <p><strong>Місце знаходження:</strong> {{ $sell->location }}</p>
+
+                @if($sell->orders->count() > 0)
+                    <p style="color:green; font-weight:bold; margin-top:10px;">🛒 Цей товар вже замовили</p>
+                @endif
             </div>
         @empty
             <p>У вас ще немає жодного оголошення.</p>
         @endforelse
     </div>
 
-    <!-- Модальне вікно для фото -->
     <div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
                                 background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
         <span onclick="closeModal()" 

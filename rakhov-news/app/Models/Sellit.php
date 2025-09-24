@@ -19,4 +19,9 @@ class Sellit extends Model
         'location',
         'user_id',
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'sellit_id', 'id');
+    }
 }

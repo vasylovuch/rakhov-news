@@ -37,7 +37,6 @@ class SellController extends Controller
         $query->where('location', 'like', "%{$location}%");
     }
 
-    // Сортування
     if ($request->filled('sort')) {
         switch ($request->input('sort')) {
             case 'price_asc':
@@ -56,7 +55,6 @@ class SellController extends Controller
                 $query->orderBy('created_at', 'desc');
         }
     } else {
-        // За замовчуванням — новіші зверху
         $query->orderBy('created_at', 'desc');
     }
 
@@ -102,4 +100,18 @@ class SellController extends Controller
         $sellits = Sellit::where('user_id', auth()->id())->get();
         return view('news.my', compact('sellits'));
     }
+
+    // app/Http/Controllers/SellitController.php
+
+    public function mySellits()
+    {
+        $sellits = auth()->user()->sellits()->latest()->get();
+
+        foreach($sellits as $sell) {
+            $sell->ordered = $sell->isOrdered();
+        }
+
+        return view('sellit.my', compact('sellits'));
+    }
+
 }

@@ -25,7 +25,6 @@
 
         <input type="text" name="location" value="{{ request('location') }}" placeholder="Місто або село" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; min-width: 150px;">
 
-        <!-- Сортування -->
         <select name="sort" onchange="this.form.submit()" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
             <option value="">Сортувати</option>
             <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Ціна: від дешевших до дорожчих</option>
@@ -43,11 +42,28 @@
             @else
                 <a href="{{ route('choose') }}" class="btn btn-add">+ Додати оголошення</a>
             @endauth
+
+            @php
+                $cart = session()->get('cart', []);
+                $cartCount = 0;
+                foreach($cart as $item) {
+                    $cartCount += $item['quantity'];
+                }
+            @endphp
+
+            <a href="{{ route('cart.index') }}" class="btn btn-cart">
+                🛒 Кошик 
+                @if($cartCount > 0)
+                    <span class="cart-badge">{{ $cartCount }}</span>
+                @endif
+            </a>
+
+            @auth
+                <a href="{{ route('orders.index') }}" class="btn btn-orders">📦 Мої замовлення</a>
+            @endauth
         </div>
     </form>
 </div>
-
-
 
     <div class="ads-grid">
         @forelse($sellits as $sell)
@@ -64,14 +80,20 @@
                 <p><strong>Категорія:</strong> {{ $sell->category }}</p>
                 <p><strong>Телефон:</strong> {{ $sell->phone }}</p>
                 <p><strong>Місце знаходження:</strong> {{ $sell->location }}</p>
+
+                @if(auth()->id() !== $sell->user_id)
+                    <form action="{{ route('cart.add', $sell->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-buy">🛒 Купити</button>
+                    </form>
+                @endif
             </div>
         @empty
             <p>Поки що немає жодного оголошення.</p>
         @endforelse
     </div>
-</div>
 
-<!-- Модальне вікно для збільшення фото -->
+
 <div id="imageModal" class="modal">
     <span class="close" onclick="closeModal()">&times;</span>
     <img id="modalImg">

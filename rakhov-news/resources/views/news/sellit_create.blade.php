@@ -8,6 +8,11 @@
     <div class="form-card">
         <h2 class="form-title">Створити нове оголошення</h2>
 
+        {{-- Відображення імені користувача, якщо він увійшов --}}
+        @auth
+            <p style="font-weight:bold; margin-bottom: 20px;">Привіт, {{ auth()->user()->name }}! Ви додаєте нове оголошення.</p>
+        @endauth
+
         @if ($errors->any())
             <div class="alert">
                 <ul>

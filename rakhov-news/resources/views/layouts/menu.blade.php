@@ -122,17 +122,15 @@
             main { padding:30px 15px; }
         }
 
-        /* --- Стилі карток оголошень --- */
         .ads-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* автоматичні колонки мінімум 320px */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
             gap: 20px;
             justify-items: center;
             width: 100%;
             margin-top: 20px;
         }
 
-/* Стилі картки залишаються ті ж */
         .ad-card {
             width: 100%;
             max-width: 350px;
@@ -196,7 +194,6 @@
             color: #f87171;
         }
 
-        /* --- Стилі форми додавання оголошення --- */
         .form-wrapper {
             width: 100%;
             max-width: 700px;
@@ -346,7 +343,6 @@
         }
 
 
-        /* --- Кнопка Пошук --- */
         .btn-search {
             background: #2563eb;
             color: white;
@@ -357,7 +353,6 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- Кнопка Зняти фільтр --- */
         .btn-clear {
             background: #f97316;
             color: white;
@@ -368,7 +363,17 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- Кнопка Додати оголошення --- */
+                .cart-badge {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            vertical-align: top;
+            margin-left: 5px;
+        }
+
+
         .btn-add {
             background: #066445ff;
             color: white;
@@ -379,7 +384,6 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- Іконки у кнопках, якщо потрібно --- */
         .btn i {
             margin-right: 8px;
         }
@@ -388,12 +392,55 @@
             .form-row {
                 flex-direction: column;
             }
+
+            floating-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s;
         }
+
+        .floating-cart:hover {
+            transform: scale(1.05);
+        }
+
+        .floating-cart span {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+    }
+
+        
     </style>
 </head>
 <body>
 
 <header>
+    <div style="font-weight:600; font-size:1rem;">
+        @auth
+            👤 {{ auth()->user()->name ?? auth()->user()->email }}
+        @else
+            Гість
+        @endauth
+    </div>
     <div style="width:200px;"></div>
     <div class="title">
         <h1>@yield('header-title')</h1>
@@ -419,7 +466,12 @@
 <main>
     @yield('content')
 </main>
-
+<a href="{{ route('cart.index') }}" class="floating-cart">
+    🛒 Кошик
+    @if(isset($cartCount) && $cartCount > 0)
+        <span>{{ $cartCount }}</span>
+    @endif
+</a>
 <footer>
     © 2025 Новини Рахова | 
     <a href="{{ route('news.about') }}">Про нас</a> | 
