@@ -1,179 +1,51 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Продати в Рахові</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+@extends('layouts.menu')
 
-        body {
-            background: linear-gradient(135deg, #fef9f0, #f0f4f8);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: #333;
-        }
+@section('title', 'Мої оголошення')
 
-        /* HEADER */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;          /* верх і низ 0, бо висота фіксована */
-            height: 120px;             /* фіксована висота хедера */
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;         /* приховає будь-який "витікаючий" текст */
-        }
+@section('header-title', 'Мої оголошення')
+@section('header-subtitle', 'Вітаємо на нашій сторінці')
 
-        header .title {
-            text-align: center;
-            flex: 1;
-            white-space: nowrap;      /* не переносити заголовок */
-            overflow: hidden;
-            text-overflow: ellipsis;  /* якщо занадто довгий, додасть "..." */
-        }
-
-        header .title h1 {
-            font-size: 1.5rem;        /* можна підкоригувати під висоту */
-            margin: 0;
-        }
-
-        header .title p {
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        nav {
-            display: flex;
-            gap: 10px;
-            height: 100%;             /* займатиме всю висоту хедера */
-            align-items: center;      /* центрування по вертикалі */
-        }
-
-        nav a {
-            /* прибрали flex: 1; */
-            display: inline-flex;            /* для вертикального центровання тексту */
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 15px;              /* більше горизонтальних паддингів для "ширших" кнопок */
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            white-space: nowrap;             /* текст не переноситься */
-        }
-
-        nav a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            filter: brightness(1.1);
-        }
-
-        nav a:nth-child(3) {
-            background: #1263e4ff;
-        }
-
-        nav a:not(:nth-child(3)) {
-            background: #1263e4ff;
-        }
-
-        /* MAIN */
-        .main-wrapper { display: flex; justify-content: center; align-items: flex-start; padding: 40px; gap: 30px; flex: 1; }
-        .container {
-            flex: 2;
-            background-color: #fff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            padding: 30px 40px;
-            max-width: 900px;
-        }
-
-        .sell-form { display: flex; flex-direction: column; gap: 20px; }
-        .sell-form input, .sell-form textarea, .sell-form select {
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-        }
-        .sell-form button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            background: #10b981;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .sell-form button:hover { background: #059669; }
-
-        /* FOOTER */
-        footer {
-            background: #1e293b;
-            color: #fff;
-            padding: 20px 40px;
-            text-align: center;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
-        }
-        footer a { color: #3b82f6; text-decoration: none; margin: 0 10px; font-weight: 600; transition: color 0.2s; }
-        footer a:hover { color: #60a5fa; }
-    </style>
-</head>
-<body>
-
-<!-- HEADER -->
-<header>
-    <div style="width: 200px;"></div>
-    <div class="title">
-        <h1>Продати</h1>
-        <p>Вітаємо на нашій сторінці</p>
-    </div>
-    <nav>
-        <a href="{{ route('news.index') }}">Новини</a>
-        <a href="{{ route('news.about') }}">Про нас</a>
-        <a href="{{ route('sellit.index') }}">Оголошення</a>
-        <a href="{{ route('store.sellit') }}">Продай</a>
-    </nav>
-</header>
-
-<!-- MAIN CONTENT -->
-<div class="main-wrapper">
-    <div class="container">
-        <h2>Додати оголошення</h2>
-        <form class="sell-form" action="{{ route('store.sellit') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="text" name="title" placeholder="Назва товару" required>
-            <textarea name="description" placeholder="Опис товару" rows="5" required></textarea>
-            <input type="number" name="price" placeholder="Ціна (грн)" required>
-            <input type="file" name="image" accept="image/*">
-            <select name="category" required>
-                <option value="">Виберіть категорію</option>
-                <option value="electronics">Електроніка</option>
-                <option value="clothes">Одяг</option>
-                <option value="vehicles">Транспорт</option>
-                <option value="other">Інше</option>
-            </select>
-            <input type="text" name="phone" placeholder="Номер телефону" required>
-            <input type="text" name="location" placeholder="Місце знаходження (село/місто)" required>
-            <button type="submit">Опублікувати</button>
-        </form>
-    </div>
+@section('content')
+<div class="ads-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; justify-items: center; padding: 30px;">
+    @forelse($sellits as $sell)
+        <div class="ad-card" style="width: 100%; max-width: 350px; text-align: center; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 20px;">
+            @if($sell->image)
+                <img src="{{ asset('storage/' . $sell->image) }}" alt="{{ $sell->title }}" style="width:100%; border-radius:10px; cursor:pointer; margin-bottom:15px;" onclick="openModal('{{ asset('storage/' . $sell->image) }}')">
+            @else
+                <img src="https://via.placeholder.com/300x200?text=Немає+фото" alt="Немає фото" style="width:100%; border-radius:10px; cursor:pointer; margin-bottom:15px;" onclick="openModal('https://via.placeholder.com/300x200?text=Немає+фото')">
+            @endif
+            <h3 style="margin-bottom:10px;">{{ $sell->title }}</h3>
+            <p>{{ $sell->description }}</p>
+            <p class="price" style="font-weight:bold; margin:10px 0;">{{ $sell->price }} грн</p>
+            <p><strong>Категорія:</strong> {{ $sell->category }}</p>
+            <p><strong>Телефон:</strong> {{ $sell->phone }}</p>
+            <p><strong>Місце знаходження:</strong> {{ $sell->location }}</p>
+        </div>
+    @empty
+        <p style="grid-column: 1 / -1; text-align:center;">У вас ще немає жодного оголошення.</p>
+    @endforelse
 </div>
 
+<!-- Модальне вікно -->
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;">
+    <span style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;" onclick="closeModal()">&times;</span>
+    <img id="modalImg" style="max-width:90%; max-height:90%; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+</div>
 
-<!-- FOOTER -->
-<footer>
-    © 2025 Новини Рахова | 
-    <a href="{{ route('news.about') }}">Про нас</a> | 
-    <a href="{{ route('news.index') }}">Новини</a> | 
-    <a href="{{ route('sellit.index') }}">Оголошення</a> |
-    <a href="{{ route('create.sellit') }}">Продай</a>
-</footer>
+<script>
+function openModal(src) {
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+    modal.style.display = "flex";
+    modal.style.flexDirection = "column";
+    modal.style.alignItems = "center";
+    modal.style.justifyContent = "center";
+    modalImg.src = src;
+}
 
-</body>
-</html>
+function closeModal() {
+    const modal = document.getElementById("imageModal");
+    modal.style.display = "none";
+}
+</script>
+@endsection

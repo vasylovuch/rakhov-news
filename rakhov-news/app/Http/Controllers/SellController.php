@@ -11,7 +11,6 @@ class SellController extends Controller
 {
     $query = Sellit::query();
 
-    // Пошук за назвою, описом або містом (всі разом)
     if ($request->filled('query')) {
         $search = trim($request->input('query'));
         $query->where(function($q) use ($search) {
@@ -21,60 +20,86 @@ class SellController extends Controller
         });
     }
 
-    // Фільтр по категорії
     if ($request->filled('category')) {
         $query->where('category', $request->input('category'));
     }
 
-    // Мінімальна ціна
     if ($request->filled('min_price')) {
         $query->where('price', '>=', $request->input('min_price'));
     }
 
-    // Максимальна ціна
     if ($request->filled('max_price')) {
         $query->where('price', '<=', $request->input('max_price'));
     }
 
-    // Окремий фільтр по місцезнаходженню (якщо введено)
     if ($request->filled('location')) {
         $location = trim($request->input('location'));
         $query->where('location', 'like', "%{$location}%");
     }
 
-    $sellits = $query->orderBy('created_at', 'desc')->get();
+    // Сортування
+    if ($request->filled('sort')) {
+        switch ($request->input('sort')) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'date_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'date_desc':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+    } else {
+        // За замовчуванням — новіші зверху
+        $query->orderBy('created_at', 'desc');
+    }
+
+    $sellits = $query->get();
 
     return view('news.sell_index', compact('sellits'));
 }
 
 
-
     public function create()
     {
-        return view('news.sellit');
+        return view('news.sellit_create');
     }
+
+
 
     public function store(Request $request)
-{
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'price' => 'required|numeric',
-        'image' => 'nullable|image',
-        'category' => 'required|string',
-        'phone' => 'required|string|max:20',       // номер телефону
-        'location' => 'required|string|max:255',   // місце знаходження (село/місто)
-    ]);
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'category' => 'required|string',
+            'phone' => 'required|string',
+            'location' => 'required|string',
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-    // Збереження фото, якщо є
-    if ($request->hasFile('image')) {
-        $data['image'] = $request->file('image')->store('uploads', 'public');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('uploads', 'public');
+        }
+
+        $data['user_id'] = auth()->id();
+
+        Sellit::create($data);
+
+        return redirect()->route('sellit.index')->with('success', 'Оголошення додано!');
     }
 
-    // Збереження в базу
-    Sellit::create($data);
 
-    return redirect()->route('sellit.index')->with('success', 'Оголошення додано!');
-}
-
+    public function my()
+    {
+        $sellits = Sellit::where('user_id', auth()->id())->get();
+        return view('news.my', compact('sellits'));
+    }
 }

@@ -17,5 +17,6 @@ class Sellit extends Model
         'category',
         'phone',
         'location',
+        'user_id',
     ];
 }

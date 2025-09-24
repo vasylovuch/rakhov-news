@@ -10,39 +10,32 @@ class AuthenticatedSessionController extends Controller
 {
     public function create()
     {
-        // Показати форму входу
         return view('auth.login'); 
     }
 
     public function store(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if (Auth::attempt($credentials, $request->filled('remember'))) {
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
 
-        // Скидаємо старий intended URL, щоб fallback не йшов на '/'
-        $request->session()->forget('url.intended');
+            return redirect()->intended(route('create.sellit')); 
+        }
 
-        // Перенаправлення на сторінку створення новини
-        return redirect()->route('news.create');
+        return back()->withErrors([
+            'email' => 'Невірні дані для входу.',
+        ]);
     }
-
-    return back()->withErrors([
-        'email' => 'Невірні дані для входу.',
-    ]);
-}
-
-
 
     public function destroy(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect()->intended(route('news.index')); ;
     }
 }

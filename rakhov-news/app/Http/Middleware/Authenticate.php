@@ -8,9 +8,8 @@ class Authenticate extends Middleware
 {
     protected function redirectTo($request)
     {
-        // Якщо запит не AJAX, редіректимо на login
         if (!$request->expectsJson()) {
-            return route('login'); // <--- обов'язково route('login')
+            return route('choose');
         }
     }
 }

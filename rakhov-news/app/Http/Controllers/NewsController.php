@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\News;
-use PhpParser\Node\Expr\FuncCall;
 
 class NewsController extends Controller
 {
@@ -69,11 +68,6 @@ class NewsController extends Controller
         $news->delete();
         return redirect()->route('news.index')
                          ->with('success', 'Новину видалено!');
-    }
-
-    public function choose() 
-    {
-        return view('auth.choose');
     }
 
     public function about() 

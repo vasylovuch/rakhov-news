@@ -1,43 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Вхід</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: #fff;
+            padding: 40px 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #2563eb;
+        }
+
+        .login-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-box input {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .login-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 6px rgba(37,99,235,0.3);
+        }
+
+        .login-box button {
+            background: #2563eb;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-box button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .login-box label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .login-box p {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .login-box a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+
+        .error-list {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            color: #b91c1c;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-        <div>
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ old('email') }}" required autofocus>
-        </div>
-
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" required>
-        </div>
-
-        <div>
+    <div class="login-box">
+        <h2>Вхід</h2>
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <input type="email" name="email" value="{{ old('email') }}" placeholder="Електронна пошта" required autofocus>
+            <input type="password" name="password" placeholder="Пароль" required>
             <label>
-                <input type="checkbox" name="remember"> Remember Me
+                <input type="checkbox" name="remember"> Запам’ятати мене
             </label>
-        </div>
+            <button type="submit">Увійти</button>
+        </form>
 
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
+        @if ($errors->any())
+            <div class="error-list">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li style="color:red;">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        <p>Ще немає акаунта? <a href="{{ route('register') }}">Реєстрація</a></p>
+    </div>
 </body>
 </html>

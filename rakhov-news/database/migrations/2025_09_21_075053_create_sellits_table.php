@@ -10,20 +10,22 @@ return new class extends Migration
     {
         Schema::create('sellits', function (Blueprint $table) {
             $table->id();
-            $table->string('title');               // назва товару
-            $table->text('description');           // опис
-            $table->decimal('price', 10, 2);       // ціна
-            $table->string('image')->nullable();   // шлях до фото
-            $table->string('category');            // категорія
-            $table->string('phone')->nullable();   // номер телефону
-            $table->string('location')->nullable(); // місце знаходження (село/місто)
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            $table->string('title');               
+            $table->text('description');          
+            $table->decimal('price', 10, 2);       
+            $table->string('image')->nullable();   
+            $table->string('category');            
+            $table->string('phone')->nullable();   
+            $table->string('location')->nullable(); 
             $table->timestamps();
         });
-
     }
 
     public function down(): void
     {
         Schema::dropIfExists('sellits');
     }
+
 };

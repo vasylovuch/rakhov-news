@@ -2,11 +2,11 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Вхід або Реєстрація</title>
+    <title>Вхід</title>
     <style>
         body {
-            background: #f4f6f8;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,135 +14,84 @@
             margin: 0;
         }
 
-        .box {
+        .login-box {
             background: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            width: 400px;
+            padding: 40px 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 25px;
+        .login-box h2 {
+            margin-bottom: 20px;
             color: #2563eb;
         }
 
-        .tabs {
+        .login-box form {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            border-radius: 8px 8px 0 0;
-            background: #e5e7eb;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        .tab.active {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        form {
-            display: none;
             flex-direction: column;
+            gap: 15px;
         }
 
-        form.active {
-            display: flex;
-        }
-
-        input {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+        .login-box input {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
             font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
         }
 
-        button {
+        .login-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 6px rgba(37,99,235,0.3);
+        }
+
+        .login-box button {
+            background: #2563eb;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
             padding: 12px;
             border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: #fff;
-            font-weight: 600;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: 0.2s;
         }
 
-        button:hover {
+        .login-box button:hover {
             background: #1d4ed8;
+            transform: translateY(-2px);
         }
 
-        .error {
-            color: #dc2626;
+        .login-box p {
+            margin-top: 15px;
             font-size: 0.9rem;
-            margin-bottom: 10px;
         }
 
-        .success {
-            color: #059669;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
+        .login-box a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-box a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h1>Авторизація / Реєстрація</h1>
-        <div class="tabs">
-            <div class="tab active" data-target="login-form">Увійти</div>
-            <div class="tab" data-target="register-form">Зареєструватися</div>
-        </div>
-
-        <!-- Форма входу -->
-        <form method="POST" action="{{ route('login') }}" id="login-form" class="active">
+    <div class="login-box">
+        <h2>Вхід</h2>
+        <form method="POST" action="{{ route('login') }}">
             @csrf
-            @if($errors->login->any())
-                @foreach($errors->login->all() as $error)
-                    <div class="error">{{ $error }}</div>
-                @endforeach
-            @endif
-            <input type="email" name="email" placeholder="Електронна пошта" required value="{{ old('email') }}">
+            <input type="email" name="email" placeholder="Електронна пошта" required>
             <input type="password" name="password" placeholder="Пароль" required>
             <button type="submit">Увійти</button>
         </form>
-
-        <!-- Форма реєстрації -->
-        <form method="POST" action="{{ route('register') }}" id="register-form">
-            @csrf
-            @if($errors->register->any())
-                @foreach($errors->register->all() as $error)
-                    <div class="error">{{ $error }}</div>
-                @endforeach
-            @endif
-            <input type="text" name="name" placeholder="Ім'я" required value="{{ old('name') }}">
-            <input type="email" name="email" placeholder="Електронна пошта" required value="{{ old('email') }}">
-            <input type="password" name="password" placeholder="Пароль" required>
-            <input type="password" name="password_confirmation" placeholder="Підтвердження паролю" required>
-            <button type="submit">Зареєструватися</button>
-        </form>
+        <p>Ще немає акаунта? <a href="{{ route('register') }}">Реєстрація</a></p>
     </div>
-
-    <script>
-        const tabs = document.querySelectorAll('.tab');
-        const forms = document.querySelectorAll('form');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                const target = tab.dataset.target;
-                forms.forEach(f => f.id === target ? f.classList.add('active') : f.classList.remove('active'));
-            });
-        });
-    </script>
 </body>
 </html>
